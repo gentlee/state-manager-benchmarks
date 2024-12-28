@@ -2,7 +2,7 @@ import { createStore, combineReducers } from 'redux';
 import { combineSlices, configureStore, createSlice } from '@reduxjs/toolkit';
 import { produce, setAutoFreeze, original } from 'immer';
 
-const generateLargeState = () => ({
+const initialState = {
   largeArray: Array.from({ length: 10000 }, (_, i) => ({
     id: i,
     value: Math.random(),
@@ -14,8 +14,7 @@ const generateLargeState = () => ({
     name: `name-${i}`,
     isActive: i % 2 === 0,
   })),
-});
-const initialState = generateLargeState();
+}
 
 const vanillaReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -118,7 +117,7 @@ function benchmark(name, setupFn, runFn, warmupCount = 100, runCount = 5000) {
 
   const store = setupFn();
 
-  // Warmup phase
+  // Warmup
 
   for (let i = 0; i < warmupCount; i++) {
     runFn(store, i);
@@ -126,7 +125,7 @@ function benchmark(name, setupFn, runFn, warmupCount = 100, runCount = 5000) {
 
   global?.gc()
 
-  // Measurement phase
+  // Measurement
 
   const start = performance.now();
   for (let i = 0; i < runCount; i++) {
