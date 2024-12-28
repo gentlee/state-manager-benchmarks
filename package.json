@@ -1,0 +1,16 @@
+{
+  "name": "redux-vs-rtk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "benchmark.js",
+  "scripts": {
+    "start": "NODE_ENV=production node --expose-gc benchmark.mjs"
+  },
+  "author": "gen1lee",
+  "license": "MIT",
+  "devDependencies": {
+    "@reduxjs/toolkit": "2.5.0",
+    "immer": "10.1.1",
+    "redux": "5.0.1"
+  }
+}
