@@ -136,7 +136,7 @@ function benchmark(actionKey, variant, setupFn) {
   // Setup
 
   const warmupCount = 100
-  const runCount = 5000
+  const runCount = 1000
   const store = setupFn()
   const action = actions[actionKey]
   const run = (store, index) => store.dispatch(action(index))
@@ -288,7 +288,7 @@ console.log(
 for (const action in results) {
   console.log(
     `|${action}|${Object.values(results[action])
-      .map((value) => value / results[action]['no-immer'])
+      .map((value) => (value / results[action]['no-immer']).toFixed(1))
       .join('|')}|`
   )
 }
