@@ -6,20 +6,20 @@ const initialState = {
   array: Array.from({length: 10000}, (_, i) => ({
     id: i,
     value: Math.random(),
-    nested: {key: `key-${i}`, data: Math.random()},
-    moreNested: {items: Array.from({length: 100}, (_, i) => ({id: i, name: String(i)}))},
-  })),
-  otherData: Array.from({length: 10000}, (_, i) => ({
-    id: i,
-    name: `name-${i}`,
-    isActive: i % 2 === 0,
+    nested: {key: `key-${i}`, value: Math.random()},
   })),
 }
 
 const actions = {
-  add: (index) => ({type: 'test/addItem', payload: {id: index, value: index, nested: {data: index}}}),
+  add: (index) => ({
+    type: 'test/addItem',
+    payload: {id: index, value: index, nested: {key: `key-${index}`, value: index}},
+  }),
   remove: (index) => ({type: 'test/removeItem', payload: index}),
-  update: (index) => ({type: 'test/updateItem', payload: {id: index, value: index, nestedData: index}}),
+  update: (index) => ({
+    type: 'test/updateItem',
+    payload: {id: index, value: Math.random(), nestedValue: Math.random()},
+  }),
   concat: (index) => ({
     type: 'test/concatArray',
     payload: Array.from({length: 500}, (_, i) => ({id: i, value: index})),
@@ -47,7 +47,7 @@ const reducers = {
               ? {
                   ...item,
                   value: action.payload.value,
-                  nested: {...item.nested, data: action.payload.nestedData},
+                  nested: {...item.nested, value: action.payload.nestedValue},
                 }
               : item
           ),
@@ -77,7 +77,7 @@ const reducers = {
       updateItem: (state, action) => {
         const item = state.array.find((item) => item.id === action.payload.id)
         item.value = action.payload.value
-        item.nested.data = action.payload.nestedData
+        item.nested.value = action.payload.nestedValue
       },
       concatArray: (state, action) => {
         state.array.unshift(...action.payload)
@@ -109,7 +109,7 @@ const reducers = {
               ? {
                   ...item,
                   value: action.payload.value,
-                  nested: {...item.nested, data: action.payload.nestedData},
+                  nested: {...item.nested, value: action.payload.nestedValue},
                 }
               : item
           ),
