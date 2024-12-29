@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
-    "checkJs": false
+    "lib": [
+      "es2015"
+    ],
+    "checkJs": true
   }
 }
