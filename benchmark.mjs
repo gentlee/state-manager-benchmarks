@@ -3,7 +3,7 @@ import {original, setAutoFreeze} from 'immer'
 import {performance} from 'perf_hooks'
 
 const initialState = {
-  largeArray: Array.from({length: 10000}, (_, i) => ({
+  array: Array.from({length: 10000}, (_, i) => ({
     id: i,
     value: Math.random(),
     nested: {key: `key-${i}`, data: Math.random()},
@@ -26,22 +26,24 @@ const actions = {
   }),
 }
 
+const results = {}
+
 const vanillaReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'test/addItem':
       return {
         ...state,
-        largeArray: [...state.largeArray, action.payload],
+        array: [...state.array, action.payload],
       }
     case 'test/removeItem':
       return {
         ...state,
-        largeArray: state.largeArray.filter((_, i) => i !== action.payload),
+        array: state.array.filter((_, i) => i !== action.payload),
       }
     case 'test/updateItem':
       return {
         ...state,
-        largeArray: state.largeArray.map((item) =>
+        array: state.array.map((item) =>
           item.id === action.payload.id
             ? {
                 ...item,
@@ -52,11 +54,11 @@ const vanillaReducer = (state = initialState, action) => {
         ),
       }
     case 'test/concatArray': {
-      const newArray = action.payload.concat(state.largeArray)
-      newArray.length = initialState.largeArray.length
+      const newArray = action.payload.concat(state.array)
+      newArray.length = initialState.array.length
       return {
         ...state,
-        largeArray: newArray,
+        array: newArray,
       }
     }
     default:
@@ -69,19 +71,19 @@ const {reducer: immerReducer} = createSlice({
   initialState,
   reducers: {
     addItem: (state, action) => {
-      state.largeArray.push(action.payload)
+      state.array.push(action.payload)
     },
     removeItem: (state, action) => {
-      state.largeArray.splice(action.payload, 1)
+      state.array.splice(action.payload, 1)
     },
     updateItem: (state, action) => {
-      const item = state.largeArray.find((item) => item.id === action.payload.id)
+      const item = state.array.find((item) => item.id === action.payload.id)
       item.value = action.payload.value
       item.nested.data = action.payload.nestedData
     },
     concatArray: (state, action) => {
-      state.largeArray.unshift(...action.payload)
-      state.largeArray.length = initialState.largeArray.length
+      state.array.unshift(...action.payload)
+      state.array.length = initialState.array.length
     },
   },
 })
@@ -93,19 +95,19 @@ const {reducer: immerReducerImmutable} = createSlice({
     addItem: (state, action) => {
       return {
         ...state,
-        largeArray: [...original(state).largeArray, action.payload],
+        array: [...original(state).array, action.payload],
       }
     },
     removeItem: (state, action) => {
       return {
         ...state,
-        largeArray: original(state).largeArray.filter((_, i) => i !== action.payload),
+        array: original(state).array.filter((_, i) => i !== action.payload),
       }
     },
     updateItem: (state, action) => {
       return {
         ...state,
-        largeArray: original(state).largeArray.map((item) =>
+        array: original(state).array.map((item) =>
           item.id === action.payload.id
             ? {
                 ...item,
@@ -117,11 +119,11 @@ const {reducer: immerReducerImmutable} = createSlice({
       }
     },
     concatArray: (state, action) => {
-      const newArray = action.payload.concat(original(state).largeArray)
-      newArray.length = initialState.largeArray.length
+      const newArray = action.payload.concat(original(state).array)
+      newArray.length = initialState.array.length
       return {
         ...state,
-        largeArray: newArray,
+        array: newArray,
       }
     },
   },
@@ -159,9 +161,10 @@ function benchmark(actionKey, variant, setupFn) {
 
   // Log results
 
+  const result = (end - start) / runCount
   results[actionKey] ??= {}
-  results[actionKey][variant] = (end - start) / runCount
-  console.log(`${actionKey} [${variant}]: ${((end - start) / runCount).toFixed(4)} ms`)
+  results[actionKey][variant] = result
+  console.log(`${actionKey} [${variant}]: ${result.toFixed(4)} ms`)
 
   globalThis.gc()
 }
@@ -175,8 +178,6 @@ console.log(`      _             _   _               _                     _    
                                  __/ |                                                            
                                 |___/                                                             
 `)
-
-const results = {}
 
 benchmark('add', 'no-immer', () => {
   return configureStore({reducer: vanillaReducer})
