@@ -4,10 +4,9 @@ Install with `npm i`
 
 Run with `npm start`
 
-### Results
+### Results (x times slower - the lower, the better)
 
-"@reduxjs/toolkit": "2.10.1"
-"immer": "10.2.0"
+#### @reduxjs/toolkit: 2.10.1, immer: 10.2.0
 
 ||no-immer|immer|immer no-auto-freeze|immer-immutable|immer-immutable no-auto-freeze|
 |-|-|-|-|-|-|
@@ -17,10 +16,7 @@ Run with `npm start`
 |concat|1.0|388.7|372.0|16.0|104.5|
 |[average]|1.0|87.5|81.7|6.5|18.1|
 
-<br/>
-
-"@reduxjs/toolkit": "2.5.0"
-"immer": "10.1.1"
+#### @reduxjs/toolkit: 2.5.0, immer: 10.1.1
 
 ||no-immer|immer|immer no-auto-freeze|immer-immutable|immer-immutable no-auto-freeze|
 |-|-|-|-|-|-|
