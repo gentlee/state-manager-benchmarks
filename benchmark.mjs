@@ -131,6 +131,17 @@ const results = {}
 
 /**
  * @param {string} actionKey
+ * @param {string} variant
+ * @param {number} result
+ */
+const addResult = (actionKey, variant, result) => {
+  results[actionKey] ??= {}
+  results[actionKey][variant] = result
+  console.log(`${actionKey} [${variant}]: ${result.toFixed(4)} ms`)
+}
+
+/**
+ * @param {string} actionKey
  * @param {keyof typeof reducers} reducerKey
  * @param {boolean} autoFreeze
  */
@@ -165,13 +176,13 @@ const benchmark = (actionKey, reducerKey, autoFreeze = true) => {
 
     const variant = `${reducerKey}${autoFreeze ? '' : ' no-auto-freeze'}`
     const result = (end - start) / runCount
-    results[actionKey] ??= {}
-    results[actionKey][variant] = result
-    console.log(`${actionKey} [${variant}]: ${result.toFixed(4)} ms`)
+    addResult(actionKey, variant, result)
   }
 
   globalThis.gc()
 }
+
+// Run benchmarks
 
 console.log(`      _             _   _               _                     _                          _        
      | |           | | (_)             | |                   | |                        | |       
@@ -191,7 +202,23 @@ for (let actionKey in actions) {
   benchmark(actionKey, 'immer-immutable', false)
 }
 
+// Calculate averages
+
+const variants = Object.keys(results['add'])
+
+for (let variant of variants) {
+  let average = 0
+  for (let actionKey in actions) {
+    average += results[actionKey][variant] / variants.length
+  }
+  addResult('[average]', variant, average)
+}
+
+// Log absolute results in table
+
 console.table(results)
+
+// Log relative results in markdown table
 
 console.log('markdown (x times slower):')
 console.log('||' + Object.keys(results.add).join('|') + '|')
