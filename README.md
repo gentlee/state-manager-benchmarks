@@ -6,7 +6,7 @@ Run with `npm start`
 
 ### Results (x times slower - the lower, the better)
 
-How to read: "remove" operation for RTK with immer (slices) is at average 87.1 times slower than RTK with vanilla redux reducers.
+How to read: "remove" operation for RTK with immer (slices) is 87.1 times slower than RTK with vanilla redux reducers.
 
 #### @reduxjs/toolkit: 2.10.1, immer: 10.2.0
 
