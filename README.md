@@ -1,10 +1,12 @@
-Current benchmark is only for **Redux vs RTK**.
+Current benchmark is only for **RTK reducers (no immer) vs RTK slices (with immer)**.
 
 Install with `npm i`
 
 Run with `npm start`
 
 ### Results (x times slower - the lower, the better)
+
+How to read: Remove operation for RTK with immer (slices) is at averate by 87.5 slower than RTK with vanilla redux reducers.
 
 #### @reduxjs/toolkit: 2.10.1, immer: 10.2.0
 
